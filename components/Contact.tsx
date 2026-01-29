@@ -9,8 +9,8 @@ const ContactSection: React.FC = () => {
 
   return (
     <section id="contact" className="py-24 bg-gradient-to-b from-brand-navy to-brand-section transition-colors duration-300 min-h-[900px] flex items-center">
-      <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-24">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <h2 className="text-4xl font-bold text-brand-white mb-6">Start a Commercial Conversation About Your Conference Revenue</h2>
             <p className="text-lg text-brand-text mb-8 leading-relaxed">Every engagement begins with a structured 45-minute consultation. We'll assess your current model, identify revenue leakage, and map out a growth architecture.</p>
@@ -23,8 +23,8 @@ const ContactSection: React.FC = () => {
               </ul>
             </div>
             <div className="flex items-center gap-4 text-sm text-brand-muted bg-brand-navy/40 p-4 rounded-lg border border-brand-border/50">
-               <Globe className="text-brand-teal animate-pulse" size={20} />
-               <p>Working Hours: <span className="text-brand-white font-bold">UK 08:00 - 20:00</span>. Slots shown in your local time: <span className="text-brand-teal font-medium">{USER_TZ}</span>.</p>
+              <Globe className="text-brand-teal animate-pulse" size={20} />
+              <p>Working Hours: <span className="text-brand-white font-bold">UK 08:00 - 20:00</span>. Slots shown in your local time: <span className="text-brand-teal font-medium">{USER_TZ}</span>.</p>
             </div>
           </motion.div>
 

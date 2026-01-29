@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown, CheckCircle, TrendingUp, Users, Target, FileText, Check, X, CreditCard, DollarSign } from 'lucide-react';
 import BookingFlow from './BookingFlow';
+import { useLenis } from './SmoothScroll';
 
 const WaveBackground: React.FC = () => {
   return (
@@ -46,9 +47,9 @@ const PipelineVisual = () => {
         const newDeals = prevDeals.map(deal => {
           // If closed, reset to start to loop animation
           if (deal.stage === 3) {
-             // Trigger revenue bump
-             setRevenue(prev => prev + (Math.floor(Math.random() * 5) * 100)); 
-             return { ...deal, stage: 0, id: Math.random() }; // Reset
+            // Trigger revenue bump
+            setRevenue(prev => prev + (Math.floor(Math.random() * 5) * 100));
+            return { ...deal, stage: 0, id: Math.random() }; // Reset
           }
           // Move forward
           return { ...deal, stage: deal.stage + 1 };
@@ -62,105 +63,106 @@ const PipelineVisual = () => {
 
   return (
     <div className="relative w-full h-full p-6 flex flex-col">
-       {/* Header / Revenue Counter */}
-       <div className="flex justify-between items-end mb-8 pb-4 border-b border-brand-border/50">
-          <div>
-            <p className="text-xs font-bold text-brand-muted uppercase tracking-wider mb-1">Total Pipeline Value</p>
-            <div className="text-3xl font-bold text-brand-white tabular-nums flex items-center gap-2">
-               <motion.span 
-                 key={revenue}
-                 initial={{ opacity: 0.5, y: -5 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 className="text-brand-teal"
-               >
-                 ${revenue.toLocaleString()}
-               </motion.span>
-               <TrendingUp size={16} className="text-brand-teal/50" />
-            </div>
+      {/* Header / Revenue Counter */}
+      <div className="flex justify-between items-end mb-8 pb-4 border-b border-brand-border/50">
+        <div>
+          <p className="text-xs font-bold text-brand-muted uppercase tracking-wider mb-1">Total Pipeline Value</p>
+          <div className="text-3xl font-bold text-brand-white tabular-nums flex items-center gap-2">
+            <motion.span
+              key={revenue}
+              initial={{ opacity: 0.5, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-brand-teal"
+            >
+              ${revenue.toLocaleString()}
+            </motion.span>
+            <TrendingUp size={16} className="text-brand-teal/50" />
           </div>
-          <div className="text-right hidden sm:block">
-            <div className="flex items-center justify-end gap-1.5 mb-1">
-               <span className="w-2 h-2 rounded-full bg-brand-teal animate-pulse"></span>
-               <p className="text-[10px] font-bold text-brand-teal uppercase">Engine Active</p>
-            </div>
-            <p className="text-xs text-brand-muted">Real-time Attribution</p>
+        </div>
+        <div className="text-right hidden sm:block">
+          <div className="flex items-center justify-end gap-1.5 mb-1">
+            <span className="w-2 h-2 rounded-full bg-brand-teal animate-pulse"></span>
+            <p className="text-[10px] font-bold text-brand-teal uppercase">Engine Active</p>
           </div>
-       </div>
+          <p className="text-xs text-brand-muted">Real-time Attribution</p>
+        </div>
+      </div>
 
-       {/* Pipeline Lanes */}
-       <div className="grid grid-cols-4 gap-2 h-full">
-          {stages.map((stage, index) => (
-             <div key={stage.id} className="flex flex-col h-full relative">
-                {/* Lane Header */}
-                <div className="flex items-center gap-2 mb-4 opacity-70">
-                   <stage.icon size={14} className={stage.color} />
-                   <span className="text-[10px] font-bold text-brand-muted uppercase hidden sm:block">{stage.label}</span>
-                </div>
-                
-                {/* Lane Track */}
-                <div className="flex-grow bg-brand-navy/30 rounded-lg border border-brand-border/30 relative p-2">
-                   {/* Deal Cards */}
-                   <AnimatePresence>
-                      {deals.filter(d => d.stage === index).map(deal => (
-                         <motion.div
-                           layoutId={`deal-${deal.id}`}
-                           key={`${deal.id}-${index}`}
-                           initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                           animate={{ opacity: 1, scale: 1, y: 0 }}
-                           exit={{ opacity: 0, scale: 0.9, y: -20 }}
-                           transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                           className="bg-brand-card border border-brand-border p-3 rounded-md shadow-lg mb-2 relative overflow-hidden group"
-                         >
-                            {/* Card Glow for Closed Won */}
-                            {index === 3 && (
-                               <motion.div 
-                                 initial={{ opacity: 0 }}
-                                 animate={{ opacity: [0, 0.5, 0] }}
-                                 transition={{ duration: 1.5, repeat: Infinity }}
-                                 className="absolute inset-0 bg-brand-teal/20"
-                               />
-                            )}
-                            <div className="flex justify-between items-start mb-1 relative z-10">
-                               <div className="w-6 h-6 rounded bg-brand-navy/50 flex items-center justify-center text-[10px] font-bold text-brand-muted">
-                                  {deal.name.charAt(0)}
-                               </div>
-                               <span className="text-[10px] font-mono text-brand-teal/80 font-bold">${(deal.value/1000).toFixed(0)}k</span>
-                            </div>
-                            <p className="text-[10px] font-bold text-brand-white truncate relative z-10">{deal.name}</p>
-                         </motion.div>
-                      ))}
-                   </AnimatePresence>
+      {/* Pipeline Lanes */}
+      <div className="grid grid-cols-4 gap-2 h-full">
+        {stages.map((stage, index) => (
+          <div key={stage.id} className="flex flex-col h-full relative">
+            {/* Lane Header */}
+            <div className="flex items-center gap-2 mb-4 opacity-70">
+              <stage.icon size={14} className={stage.color} />
+              <span className="text-[10px] font-bold text-brand-muted uppercase hidden sm:block">{stage.label}</span>
+            </div>
 
-                   {/* Background Track Lines */}
-                   <div className="absolute inset-0 flex flex-col justify-between pointer-events-none p-2 opacity-10">
-                      {[1,2,3,4].map(i => <div key={i} className="h-px w-full bg-brand-white/20" />)}
-                   </div>
-                </div>
+            {/* Lane Track */}
+            <div className="flex-grow bg-brand-navy/30 rounded-lg border border-brand-border/30 relative p-2">
+              {/* Deal Cards */}
+              <AnimatePresence>
+                {deals.filter(d => d.stage === index).map(deal => (
+                  <motion.div
+                    layoutId={`deal-${deal.id}`}
+                    key={`${deal.id}-${index}`}
+                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: -20 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    className="bg-brand-card border border-brand-border p-3 rounded-md shadow-lg mb-2 relative overflow-hidden group"
+                  >
+                    {/* Card Glow for Closed Won */}
+                    {index === 3 && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 0.5, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                        className="absolute inset-0 bg-brand-teal/20"
+                      />
+                    )}
+                    <div className="flex justify-between items-start mb-1 relative z-10">
+                      <div className="w-6 h-6 rounded bg-brand-navy/50 flex items-center justify-center text-[10px] font-bold text-brand-muted">
+                        {deal.name.charAt(0)}
+                      </div>
+                      <span className="text-[10px] font-mono text-brand-teal/80 font-bold">${(deal.value / 1000).toFixed(0)}k</span>
+                    </div>
+                    <p className="text-[10px] font-bold text-brand-white truncate relative z-10">{deal.name}</p>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
 
-                {/* Connector Arrow */}
-                {index < 3 && (
-                   <div className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-brand-border">
-                      <motion.div 
-                        animate={{ opacity: [0.3, 1, 0.3], x: [0, 2, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: index * 0.5 }}
-                      >
-                         <ArrowDown className="-rotate-90 w-4 h-4" />
-                      </motion.div>
-                   </div>
-                )}
-             </div>
-          ))}
-       </div>
+              {/* Background Track Lines */}
+              <div className="absolute inset-0 flex flex-col justify-between pointer-events-none p-2 opacity-10">
+                {[1, 2, 3, 4].map(i => <div key={i} className="h-px w-full bg-brand-white/20" />)}
+              </div>
+            </div>
+
+            {/* Connector Arrow */}
+            {index < 3 && (
+              <div className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-brand-border">
+                <motion.div
+                  animate={{ opacity: [0.3, 1, 0.3], x: [0, 2, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.5 }}
+                >
+                  <ArrowDown className="-rotate-90 w-4 h-4" />
+                </motion.div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
 const Hero: React.FC = () => {
+  const lenis = useLenis();
   const [text, setText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  
+
   const phrases = ["Sponsorship Engine", "Revenue Architecture", "Commercial Blueprint"];
   const longestPhrase = "Commercial Blueprint";
   const typingSpeed = 80;
@@ -188,25 +190,25 @@ const Hero: React.FC = () => {
 
   const scrollToHowItWorks = (e: React.MouseEvent) => {
     e.preventDefault();
-    const element = document.getElementById('how-it-works');
-    if (element) {
-      const headerOffset = 100;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
+    if (lenis) {
+      lenis.scrollTo('#how-it-works', { offset: -100 });
+    } else {
+      const element = document.getElementById('how-it-works');
+      if (element) {
+        const headerOffset = 100;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      }
     }
   };
 
   return (
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-brand-navy transition-colors duration-300">
       <WaveBackground />
-      <div className="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-5 gap-12 items-center h-full">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-24 relative z-10 grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center h-full">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="lg:col-span-3 space-y-8">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-brand-white">
+          <h1 className="text-4xl md:text-5xl lg:text-6x font-bold leading-tight text-brand-white">
             <span className="block mb-1 lg:mb-0">The</span>
             <span className="relative inline-grid grid-cols-1 grid-rows-1">
               <span className="invisible row-start-1 col-start-1 h-0 lg:h-auto whitespace-nowrap">{longestPhrase}</span>
@@ -218,54 +220,54 @@ const Hero: React.FC = () => {
             SponsrBridge operates as your embedded sponsorship team, owning strategy, sales execution, and relationships under a single commercial mandate.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <motion.button 
+            <motion.button
               onClick={() => setIsBookingModalOpen(true)}
-              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(121,243,222,0.4)" }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-brand-teal text-brand-navy font-bold rounded text-center transition-colors duration-300"
+              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(var(--accent-rgb),0.4)" }}
+              whileTap={{ scale: 0.97 }}
+              className="px-8 py-4 bg-brand-teal text-brand-navy font-bold rounded-lg text-center transition-colors duration-300"
             >
               Book a Revenue Strategy Call
             </motion.button>
-            <motion.a 
-              href="#how-it-works" 
+            <motion.a
+              href="#how-it-works"
               onClick={scrollToHowItWorks}
-              whileHover={{ scale: 1.05, backgroundColor: "rgba(121,243,222,0.1)" }} 
-              whileTap={{ scale: 0.95 }} 
-              className="px-8 py-4 border border-brand-teal/50 text-brand-teal font-semibold rounded text-center transition-all duration-300 cursor-pointer"
+              whileHover={{ scale: 1.05, backgroundColor: "rgba(var(--accent-rgb),0.1)" }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-4 border border-brand-teal/50 text-brand-teal font-bold rounded-lg text-center transition-all duration-300 cursor-pointer"
             >
               See How It Works
             </motion.a>
           </div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 1 }} className="pt-8 border-t border-brand-border mt-8 flex flex-wrap gap-4 md:gap-8 text-sm text-brand-muted">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 1 }} className="pt-8 border-t border-brand-border my-8 flex flex-wrap gap-4 md:gap-8 text-sm text-brand-muted">
             <div className="flex items-center gap-2"><CheckCircle size={16} className="text-brand-teal" /><span>Embedded sponsorship teams</span></div>
             <div className="flex items-center gap-2"><CheckCircle size={16} className="text-brand-teal" /><span>Outcome-led design</span></div>
           </motion.div>
         </motion.div>
-        
+
         {/* NEW HERO VISUAL: REVENUE PIPELINE ENGINE */}
-        <motion.div 
-            initial={{ opacity: 0, x: 30 }} 
-            animate={{ opacity: 1, x: 0 }} 
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }} 
-            className="lg:col-span-2 relative h-[450px] w-full flex items-center justify-center"
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          className="lg:col-span-2 relative h-[450px] w-full flex items-center justify-center"
         >
-            <div className="relative w-full h-full bg-brand-card/50 rounded-2xl border border-brand-border shadow-2xl overflow-hidden backdrop-blur-sm group">
-                {/* Background Grid */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(20,88,151,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(20,88,151,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-                
-                {/* Ambient Glow */}
-                <motion.div 
-                  animate={{ opacity: [0.3, 0.6, 0.3] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute top-0 right-0 w-64 h-64 bg-brand-teal/5 blur-[80px] rounded-full pointer-events-none"
-                />
+          <div className="relative w-full h-full bg-brand-card/50 rounded-2xl border border-brand-border shadow-2xl overflow-hidden backdrop-blur-sm group">
+            {/* Background Grid */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(var(--blue-rgb),0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--blue-rgb),0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
 
-                {/* Pipeline Component */}
-                <PipelineVisual />
+            {/* Ambient Glow */}
+            <motion.div
+              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-0 right-0 w-64 h-64 bg-brand-teal/5 blur-[80px] rounded-full pointer-events-none"
+            />
 
-                {/* Decorative Bottom Bar */}
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-brand-blue via-brand-teal to-brand-blue opacity-50"></div>
-            </div>
+            {/* Pipeline Component */}
+            <PipelineVisual />
+
+            {/* Decorative Bottom Bar */}
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-brand-blue via-brand-teal to-brand-blue opacity-50"></div>
+          </div>
         </motion.div>
       </div>
 

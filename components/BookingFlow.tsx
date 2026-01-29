@@ -159,7 +159,7 @@ const BookingFlow: React.FC<BookingFlowProps> = ({ compact = false }) => {
                 <label className="text-[10px] uppercase tracking-wider text-brand-muted font-bold">Revenue Challenge</label>
                 <textarea rows={2} value={formData.challenge} onChange={(e) => setFormData({...formData, challenge: e.target.value})} className="w-full bg-brand-navy border border-brand-border rounded p-3 text-brand-white focus:border-brand-teal focus:outline-none" placeholder="What are you looking to solve?"></textarea>
               </div>
-              <button className="w-full bg-brand-teal text-brand-navy font-bold py-4 rounded hover:bg-white transition-all text-lg flex items-center justify-center gap-2 mt-4">
+              <button className="w-full bg-brand-teal text-brand-navy font-bold py-4 rounded hover:bg-brand-accent-hover transition-all text-lg flex items-center justify-center gap-2 mt-4">
                 Next: Choose a Time <ChevronRight size={20} />
               </button>
             </form>
@@ -213,7 +213,7 @@ const BookingFlow: React.FC<BookingFlowProps> = ({ compact = false }) => {
                   ))}
                 </div>
                 <div className="mt-auto pt-6">
-                  <button disabled={!selectedSlot || isSubmitting} onClick={handleBooking} className={`w-full py-4 rounded font-bold transition-all flex items-center justify-center gap-2 ${!selectedSlot || isSubmitting ? 'bg-brand-border text-brand-muted cursor-not-allowed' : 'bg-brand-teal text-brand-navy hover:bg-white'}`}>
+                  <button disabled={!selectedSlot || isSubmitting} onClick={handleBooking} className={`w-full py-4 rounded font-bold transition-all flex items-center justify-center gap-2 ${!selectedSlot || isSubmitting ? 'bg-brand-border text-brand-muted cursor-not-allowed' : 'bg-brand-teal text-brand-navy hover:bg-brand-accent-hover'}`}>
                     {isSubmitting ? <Loader2 size={20} className="animate-spin" /> : <><Clock size={18} /> Confirm Strategy Call</>}
                   </button>
                 </div>
@@ -224,7 +224,7 @@ const BookingFlow: React.FC<BookingFlowProps> = ({ compact = false }) => {
 
         {step === 'success' && (
           <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-12 text-center">
-            <div className="w-20 h-20 bg-brand-teal/10 rounded-full flex items-center justify-center mx-auto border-2 border-brand-teal mb-6 shadow-[0_0_30px_rgba(121,243,222,0.2)]">
+            <div className="w-20 h-20 bg-brand-teal/10 rounded-full flex items-center justify-center mx-auto border-2 border-brand-teal mb-6 shadow-[0_0_30px_rgba(var(--accent-rgb),0.2)]">
               <CheckCircle2 size={40} className="text-brand-teal" />
             </div>
             <h3 className="text-3xl font-bold text-brand-white mb-4">Confirmed</h3>

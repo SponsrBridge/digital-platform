@@ -281,8 +281,9 @@ const LiveChat: React.FC = () => {
             ) : (
               /* Chat State */
               <>
-                <div 
+                <div
                   ref={scrollAreaRef}
+                  data-lenis-prevent
                   className="flex-grow p-4 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-brand-border scrollbar-track-transparent"
                 >
                   {messages.map((msg) => (
@@ -300,7 +301,7 @@ const LiveChat: React.FC = () => {
                         </div>
                         <div className={`p-3 rounded-2xl text-sm leading-relaxed ${
                           msg.role === 'user' 
-                            ? 'bg-brand-blue text-white rounded-tr-none' 
+                            ? 'bg-brand-blue text-brand-white rounded-tr-none' 
                             : 'bg-brand-navy border border-brand-border text-brand-text rounded-tl-none'
                         }`}>
                           {msg.text}

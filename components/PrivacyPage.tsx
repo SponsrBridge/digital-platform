@@ -2,10 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Lock, FileText, ChevronRight, Cookie, Globe } from 'lucide-react';
-
-interface PrivacyPageProps {
-  onNavigate: (page: 'home' | 'about' | 'services' | 'contact' | 'faq' | 'insights' | 'privacy' | 'terms') => void;
-}
+import { useLenis } from './SmoothScroll';
 
 const sections = [
   { id: 'intro', title: '1. Introduction' },
@@ -23,11 +20,16 @@ const sections = [
   { id: 'contact', title: '13. Contact Us' },
 ];
 
-const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
+const PrivacyPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>('intro');
+  const lenis = useLenis();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -53,21 +55,25 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
   }, []);
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      // Offset for fixed navbar (approx 80px) + some padding
-      const y = element.getBoundingClientRect().top + window.pageYOffset - 100;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+    if (lenis) {
+      lenis.scrollTo(`#${id}`, { offset: -100 });
       setActiveSection(id);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        const y = element.getBoundingClientRect().top + window.pageYOffset - 100;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        setActiveSection(id);
+      }
     }
   };
 
   return (
     <div className="pt-20 min-h-screen bg-brand-navy font-sans text-brand-text">
-      
+
       {/* Header */}
       <section className="py-16 bg-brand-section border-b border-brand-border/30">
-        <div className="container mx-auto px-6 text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-24 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -80,9 +86,9 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid lg:grid-cols-12 gap-12 relative items-start">
-          
+      <div className="container mx-auto px-4 sm:px-6 lg:px-24 py-12">
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-12 relative items-start">
+
           {/* Sidebar Navigation (Desktop) */}
           <div className="hidden lg:block lg:col-span-3 sticky top-28 self-start">
             <div className="bg-brand-card border border-brand-border rounded-xl p-6 overflow-y-auto max-h-[calc(100vh-8rem)] shadow-xl">
@@ -94,11 +100,10 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
                   <button
                     key={section.id}
                     onClick={() => scrollToSection(section.id)}
-                    className={`block w-full text-left px-3 py-2 text-sm rounded transition-all duration-200 border-l-2 ${
-                        activeSection === section.id 
-                        ? 'border-brand-teal text-brand-teal bg-brand-teal/10 font-semibold' 
+                    className={`block w-full text-left px-3 py-2 text-sm rounded transition-all duration-200 border-l-2 ${activeSection === section.id
+                        ? 'border-brand-teal text-brand-teal bg-brand-teal/10 font-semibold'
                         : 'border-transparent text-brand-muted hover:text-brand-white hover:bg-brand-navy/50'
-                    }`}
+                      }`}
                   >
                     {section.title}
                   </button>
@@ -109,7 +114,7 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
 
           {/* Main Content */}
           <div className="lg:col-span-9 space-y-16">
-            
+
             {/* 1. Introduction */}
             <section id="intro" className="space-y-4 scroll-mt-28">
               <h2 className="text-2xl font-bold text-brand-white flex items-center gap-2">
@@ -144,7 +149,7 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
               </h2>
               <div className="space-y-6">
                 <p>We collect information that you provide directly to us, information collected automatically when you use our Website, and information from third-party sources.</p>
-                
+
                 <div className="bg-brand-card p-6 rounded-xl border border-brand-border">
                   <h3 className="text-xl font-bold text-brand-white mb-3">2.1 Information You Provide Directly</h3>
                   <p className="mb-4">We collect information you voluntarily provide when you:</p>
@@ -198,7 +203,7 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
               <h2 className="text-2xl font-bold text-brand-white flex items-center gap-2">
                 <span className="text-brand-teal">3.</span> How We Use Your Information
               </h2>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-4 md:gap-6">
                 <div className="bg-brand-navy border border-brand-border p-5 rounded-lg">
                   <h3 className="text-lg font-bold text-brand-white mb-3">3.1 Providing and Improving Services</h3>
                   <ul className="space-y-2 text-sm text-brand-muted">
@@ -264,7 +269,7 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
             </section>
 
             {/* 5. Data Retention & 6. Security */}
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6 md:gap-8">
               <section id="retention" className="space-y-4 scroll-mt-28">
                 <h2 className="text-2xl font-bold text-brand-white flex items-center gap-2">
                   <span className="text-brand-teal">5.</span> Data Retention
@@ -302,7 +307,7 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
               <h2 className="text-2xl font-bold text-brand-white flex items-center gap-2">
                 <span className="text-brand-teal">7.</span> Your Rights and Choices
               </h2>
-              
+
               <div className="border-l-4 border-brand-teal pl-6 py-2">
                 <h3 className="text-xl font-bold text-brand-white mb-2">7.1 California Residents (CCPA/CPRA)</h3>
                 <p className="text-brand-muted mb-4 text-sm">If you are a California resident, you have specific rights:</p>
@@ -334,8 +339,8 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
 
             {/* 8. Third Party Links */}
             <section id="third-party" className="scroll-mt-28">
-               <h2 className="text-2xl font-bold text-brand-white mb-4"><span className="text-brand-teal">8.</span> Third-Party Links</h2>
-               <p className="text-brand-muted text-sm">Our Website may contain links to third-party websites not operated by us. This Privacy Policy does not apply to those third-party sites. We encourage you to review their privacy policies.</p>
+              <h2 className="text-2xl font-bold text-brand-white mb-4"><span className="text-brand-teal">8.</span> Third-Party Links</h2>
+              <p className="text-brand-muted text-sm">Our Website may contain links to third-party websites not operated by us. This Privacy Policy does not apply to those third-party sites. We encourage you to review their privacy policies.</p>
             </section>
 
             {/* 9. Cookie Policy */}
@@ -344,7 +349,7 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
                 <Cookie size={32} className="text-brand-teal" />
                 <h2 className="text-2xl font-bold text-brand-white">9. Cookie Policy</h2>
               </div>
-              
+
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-bold text-brand-white mb-2">9.1 What Are Cookies</h3>
@@ -410,46 +415,46 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
                     <strong>Browser Settings:</strong> Most browsers allow control over cookies. Check "Options" or "Preferences" in Chrome, Mozilla Firefox, Safari, or Microsoft Edge.
                   </p>
                 </div>
-                
+
                 <div>
-                   <h3 className="text-lg font-bold text-brand-white mb-2">9.5 Do Not Track</h3>
-                   <p className="text-sm text-brand-muted">We do not currently respond to DNT browser signals as there is no uniform standard.</p>
+                  <h3 className="text-lg font-bold text-brand-white mb-2">9.5 Do Not Track</h3>
+                  <p className="text-sm text-brand-muted">We do not currently respond to DNT browser signals as there is no uniform standard.</p>
                 </div>
               </div>
             </section>
 
             {/* 10, 11, 12 Sections */}
             <div className="space-y-8">
-               <section id="children" className="scroll-mt-28">
-                  <h2 className="text-xl font-bold text-brand-white mb-2"><span className="text-brand-teal">10.</span> Children's Privacy</h2>
-                  <p className="text-brand-muted text-sm">Our services are not directed to individuals under 18. We do not knowingly collect data from children. Contact us immediately if you believe we have inadvertently done so.</p>
-               </section>
+              <section id="children" className="scroll-mt-28">
+                <h2 className="text-xl font-bold text-brand-white mb-2"><span className="text-brand-teal">10.</span> Children's Privacy</h2>
+                <p className="text-brand-muted text-sm">Our services are not directed to individuals under 18. We do not knowingly collect data from children. Contact us immediately if you believe we have inadvertently done so.</p>
+              </section>
 
-               <section id="transfers" className="scroll-mt-28">
-                  <h2 className="text-xl font-bold text-brand-white mb-2"><span className="text-brand-teal">11.</span> International Data Transfers</h2>
-                  <p className="text-brand-muted text-sm">SponsrBridge is based in the United States. By using our Website, you consent to the transfer, storage, and processing of your information in the US, where our servers and database are located.</p>
-               </section>
+              <section id="transfers" className="scroll-mt-28">
+                <h2 className="text-xl font-bold text-brand-white mb-2"><span className="text-brand-teal">11.</span> International Data Transfers</h2>
+                <p className="text-brand-muted text-sm">SponsrBridge is based in the United States. By using our Website, you consent to the transfer, storage, and processing of your information in the US, where our servers and database are located.</p>
+              </section>
 
-               <section id="changes" className="scroll-mt-28">
-                  <h2 className="text-xl font-bold text-brand-white mb-2"><span className="text-brand-teal">12.</span> Changes to This Privacy Policy</h2>
-                  <p className="text-brand-muted text-sm">We may update this policy periodically. We will notify you by posting the updated policy on this page with a new "Last Updated" date, sending an email notification (if applicable), or displaying a notice on our Website.</p>
-               </section>
+              <section id="changes" className="scroll-mt-28">
+                <h2 className="text-xl font-bold text-brand-white mb-2"><span className="text-brand-teal">12.</span> Changes to This Privacy Policy</h2>
+                <p className="text-brand-muted text-sm">We may update this policy periodically. We will notify you by posting the updated policy on this page with a new "Last Updated" date, sending an email notification (if applicable), or displaying a notice on our Website.</p>
+              </section>
             </div>
 
             {/* 13. Contact */}
             <section id="contact" className="bg-brand-navy border border-brand-border p-8 rounded-2xl scroll-mt-28">
-               <h2 className="text-2xl font-bold text-brand-white mb-4">13. Contact Us</h2>
-               <p className="text-brand-muted mb-6">If you have any questions, concerns, or requests regarding this Privacy Policy or our privacy practices, please contact us at:</p>
-               
-               <div className="space-y-2 text-brand-white">
-                  <p className="font-bold">SponsrBridge LLC</p>
-                  <p className="text-sm text-brand-muted">Attn: Privacy Enquiries</p>
-                  <p className="text-sm">1309 Coffeen Avenue STE 1200<br />Sheridan, Wyoming 82801<br />United States</p>
-                  <p className="pt-2"><span className="text-brand-teal font-bold">Email:</span> hello@sponsrbridge.io</p>
-                  <p><span className="text-brand-teal font-bold">Phone:</span> +1 (307) 213-1114</p>
-               </div>
-               
-               <p className="text-xs text-brand-muted mt-6 italic">We will respond to your enquiry as soon as reasonably practicable and within any timeframes required by applicable law.</p>
+              <h2 className="text-2xl font-bold text-brand-white mb-4">13. Contact Us</h2>
+              <p className="text-brand-muted mb-6">If you have any questions, concerns, or requests regarding this Privacy Policy or our privacy practices, please contact us at:</p>
+
+              <div className="space-y-2 text-brand-white">
+                <p className="font-bold">SponsrBridge LLC</p>
+                <p className="text-sm text-brand-muted">Attn: Privacy Enquiries</p>
+                <p className="text-sm">1309 Coffeen Avenue STE 1200<br />Sheridan, Wyoming 82801<br />United States</p>
+                <p className="pt-2"><span className="text-brand-teal font-bold">Email:</span> hello@sponsrbridge.io</p>
+                <p><span className="text-brand-teal font-bold">Phone:</span> +1 (307) 213-1114</p>
+              </div>
+
+              <p className="text-xs text-brand-muted mt-6 italic">We will respond to your enquiry as soon as reasonably practicable and within any timeframes required by applicable law.</p>
             </section>
 
           </div>

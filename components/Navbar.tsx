@@ -1,32 +1,31 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon, Zap } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X, Sun, Moon } from 'lucide-react';
+import Logo from './Logo';
+import { useLenis } from './SmoothScroll';
 import { motion, AnimatePresence } from 'framer-motion';
-
-type Page = 'home' | 'about' | 'services' | 'contact' | 'faq' | 'insights' | 'privacy' | 'terms';
 
 interface NavItem {
   label: string;
   href: string;
 }
 
-interface NavbarProps {
-  currentPage: Page;
-  onNavigate: (page: Page) => void;
-}
-
 const navItems: NavItem[] = [
-  { label: 'Services', href: 'services' },
+  { label: 'Services', href: '/services' },
   { label: 'How It Works', href: '#how-it-works' },
   { label: 'Industries', href: '#industries' },
-  { label: 'About Us', href: 'about' },
-  { label: 'Contact', href: 'contact' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Contact', href: '/contact' },
 ];
 
-const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
+const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
+  const lenis = useLenis();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,54 +45,57 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
     }
   };
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (['about', 'services', 'contact', 'faq', 'insights', 'privacy', 'terms'].includes(href)) {
-      e.preventDefault();
-      onNavigate(href as Page);
-      setMobileMenuOpen(false);
-      return;
-    }
-
-    if (currentPage !== 'home') {
-      e.preventDefault();
-      onNavigate('home');
-      setTimeout(() => {
-        const element = document.querySelector(href);
-        if (element) element.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+  const scrollToHash = (hash: string) => {
+    if (lenis) {
+      lenis.scrollTo(hash, { offset: -80 });
     } else {
-      e.preventDefault();
-      const element = document.querySelector(href);
+      const element = document.querySelector(hash);
       if (element) element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+
+    if (href.startsWith('#')) {
+      // Anchor link — scroll on home page
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => scrollToHash(href), 100);
+      } else {
+        scrollToHash(href);
+      }
+    } else {
+      // Page link
+      navigate(href);
     }
     setMobileMenuOpen(false);
   };
 
-  const navBackground = isDark 
-    ? 'rgba(13, 17, 23, 0.8)' 
-    : 'rgba(255, 255, 255, 0.85)';
+  const isActive = (href: string) => {
+    if (href.startsWith('#')) return false;
+    return location.pathname === href;
+  };
+
+  const navBackground = 'rgba(var(--navy-rgb), 0.85)';
 
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-md border-b border-transparent ${
-        scrolled ? 'py-4 shadow-lg border-brand-border/10' : 'py-6'
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-md border-b border-transparent ${scrolled ? 'py-4 shadow-lg border-brand-border/10' : 'py-6'
+        }`}
       style={{ backgroundColor: navBackground }}
     >
-      <div className="container mx-auto px-6 flex justify-between items-center">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-24 flex justify-between items-center">
         {/* Logo */}
-        <a 
-          href="#" 
-          onClick={(e) => { e.preventDefault(); onNavigate('home'); }}
+        <a
+          href="/"
+          onClick={(e) => { e.preventDefault(); navigate('/'); }}
           className="flex items-center gap-2 group"
         >
-          <div className="w-8 h-8 bg-brand-white rounded-tl-xl rounded-br-xl rounded-tr-sm rounded-bl-sm flex items-center justify-center group-hover:bg-brand-teal transition-colors duration-300">
-            <Zap className="text-brand-navy w-5 h-5 fill-current" />
-          </div>
-          <span className="font-sans font-bold text-xl tracking-tight text-brand-white">SPONSRBRIDGE</span>
+          <Logo variant="full" size="md" isLightMode={!isDark} />
         </a>
 
         {/* Desktop Nav */}
@@ -103,20 +105,18 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
               key={item.label}
               href={item.href}
               onClick={(e) => handleNavClick(e, item.href)}
-              className={`text-sm font-medium transition-colors relative group ${
-                (item.href === currentPage) 
-                ? 'text-brand-teal' 
+              className={`text-sm font-medium transition-colors relative group ${isActive(item.href)
+                ? 'text-brand-teal'
                 : 'text-brand-text hover:text-brand-teal'
-              }`}
+                }`}
             >
               {item.label}
-              <span className={`absolute -bottom-1 left-0 h-0.5 bg-brand-teal transition-all ${
-                (item.href === currentPage) ? 'w-full' : 'w-0 group-hover:w-full'
-              }`}></span>
+              <span className={`absolute -bottom-1 left-0 h-0.5 bg-brand-teal transition-all ${isActive(item.href) ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
             </a>
           ))}
-          
-          <motion.button 
+
+          <motion.button
             whileHover={{ scale: 1.1, rotate: 15 }}
             whileTap={{ scale: 0.9 }}
             onClick={toggleTheme}
@@ -127,11 +127,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
           </motion.button>
 
           <motion.a
-            href="contact"
-            onClick={(e) => handleNavClick(e, 'contact')}
-            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(121,243,222,0.4)" }}
+            href="/contact"
+            onClick={(e) => handleNavClick(e, '/contact')}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(var(--accent-rgb),0.4)" }}
             whileTap={{ scale: 0.95 }}
-            className="px-6 py-2.5 bg-brand-teal text-brand-navy font-semibold rounded transition-colors whitespace-nowrap"
+            className="px-6 py-2.5 bg-brand-teal text-brand-navy font-bold rounded-lg transition-colors whitespace-nowrap"
           >
             Book a Call
           </motion.a>
@@ -139,7 +139,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
 
         {/* Mobile Toggle */}
         <div className="flex items-center gap-4 md:hidden">
-          <button 
+          <button
             onClick={toggleTheme}
             className="p-2 rounded-full text-brand-white"
           >
@@ -157,7 +157,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
       {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "100vh" }}
             exit={{ opacity: 0, height: 0 }}
@@ -173,9 +173,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
                   transition={{ delay: i * 0.1 }}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className={`text-lg font-medium ${
-                    (item.href === currentPage) ? 'text-brand-teal' : 'text-brand-text hover:text-brand-teal'
-                  }`}
+                  className={`text-lg font-medium ${isActive(item.href) ? 'text-brand-teal' : 'text-brand-text hover:text-brand-teal'
+                    }`}
                 >
                   {item.label}
                 </motion.a>
@@ -184,9 +183,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                href="contact"
-                onClick={(e) => handleNavClick(e, 'contact')}
-                className="w-full text-center px-6 py-3 bg-brand-teal text-brand-navy font-bold rounded mt-4"
+                href="/contact"
+                onClick={(e) => handleNavClick(e, '/contact')}
+                className="w-full text-center px-6 py-3 bg-brand-teal text-brand-navy font-bold rounded-lg mt-4"
               >
                 Book a Call
               </motion.a>

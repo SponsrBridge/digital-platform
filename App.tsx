@@ -1,5 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import { ChallengesSection, WhatWeDoSection, ProcessSection, WhyUsSection } from './components/Features';
@@ -14,74 +15,75 @@ import FAQPage from './components/FAQPage';
 import InsightsPage from './components/InsightsPage';
 import PrivacyPage from './components/PrivacyPage';
 import TermsPage from './components/TermsPage';
+import BlogPostPage from './components/BlogPostPage';
 import LiveChat from './components/LiveChat';
+import { SmoothScrollProvider, useLenis } from './components/SmoothScroll';
 
-export type Page = 'home' | 'about' | 'services' | 'contact' | 'faq' | 'insights' | 'privacy' | 'terms';
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  const lenis = useLenis();
 
-function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('home');
-
-  // Handle back-to-top on page change
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [currentPage]);
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, lenis]);
 
-  const navigateTo = (page: Page) => {
-    setCurrentPage(page);
-  };
+  return null;
+}
 
+function HomePage() {
   return (
-    <main className="font-body bg-brand-navy min-h-screen text-brand-text">
-      <Navbar currentPage={currentPage} onNavigate={navigateTo} />
-      
-      {currentPage === 'home' && (
-        <>
-          <Hero />
-          <ChallengesSection />
-          <WhatWeDoSection />
-          <ProcessSection />
-          <WhyUsSection />
-          <IndustriesSection />
-          <ModelsSection onNavigate={navigateTo} />
-          <InsightsSection onNavigate={navigateTo} />
-          <FAQSection />
-          <ContactSection />
-        </>
-      )}
+    <>
+      <Hero />
+      <ChallengesSection />
+      <WhatWeDoSection />
+      <ProcessSection />
+      <WhyUsSection />
+      <IndustriesSection />
+      <ModelsSection />
+      <InsightsSection />
+      <FAQSection />
+      <ContactSection />
+    </>
+  );
+}
 
-      {currentPage === 'about' && (
-        <AboutPage onNavigate={navigateTo} />
-      )}
+function AppContent() {
+  return (
+    <main className="font-body bg-brand-navy min-h-screen text-brand-text overflow-x-hidden">
+      <ScrollToTop />
+      <Navbar />
 
-      {currentPage === 'services' && (
-        <ServicesPage onNavigate={navigateTo} />
-      )}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/faq" element={<FAQPage />} />
+        <Route path="/insights" element={<InsightsPage />} />
+        <Route path="/insights/:slug" element={<BlogPostPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+      </Routes>
 
-      {currentPage === 'contact' && (
-        <ContactPage onNavigate={navigateTo} />
-      )}
+      <Footer />
 
-      {currentPage === 'faq' && (
-        <FAQPage onNavigate={navigateTo} />
-      )}
-
-      {currentPage === 'insights' && (
-        <InsightsPage onNavigate={navigateTo} />
-      )}
-
-      {currentPage === 'privacy' && (
-        <PrivacyPage onNavigate={navigateTo} />
-      )}
-
-      {currentPage === 'terms' && (
-        <TermsPage onNavigate={navigateTo} />
-      )}
-
-      <Footer onNavigate={navigateTo} />
-      
       {/* Real-time AI Assistant */}
       <LiveChat />
     </main>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <SmoothScrollProvider>
+        <AppContent />
+      </SmoothScrollProvider>
+    </BrowserRouter>
   );
 }
 

@@ -48,10 +48,16 @@ export interface ModelCard {
 }
 
 export interface Article {
+  _id?: string;
   title: string;
+  slug?: { current: string };
   excerpt: string;
+  tag?: string;
+  date?: string;
   readTime: string;
   image: string;
+  author?: string;
+  isFeatured?: boolean;
 }
 
 export interface FAQItem {

@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(dir \"C:\\\\Development\\\\sponsrbridge-revenue-architecture\\\\dist\\\\assets\"\")",
+      "Bash(node -e:*)",
+      "Bash(timeout 10 npm run dev:*)",
+      "Bash(npx sanity cors:*)",
+      "Bash(curl:*)",
+      "Bash(powershell -Command \"Invoke-RestMethod -Uri ''https://rt9k03al.api.sanity.io/v2024-01-01/data/query/production?query=*[_type==\"\"post\"\"]'' -Method Get | ConvertTo-Json -Depth 10\")",
+      "Bash(powershell -Command \"Invoke-RestMethod -Uri ''https://rt9k03al.api.sanity.io/v2024-01-01/data/query/production?query=*[_type==\"\"post\"\"][0]{title,\"\"image\"\":featuredImage.asset->url}'' -Method Get | ConvertTo-Json -Depth 10\")",
+      "Bash(powershell -Command:*)",
+      "Bash(Get-Content \"C:\\\\Development\\\\sponsrbridge-revenue-architecture\\\\dist\\\\assets\\\\index-DuIzdfOW.css\" -TotalCount 150)"
+    ]
+  }
+}

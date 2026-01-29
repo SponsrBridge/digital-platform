@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+/* ============================================
+   TAILWIND v4 THEME CONFIGURATION
+
+   @theme defines design tokens on :root inside @layer theme.
+   body.light-mode overrides them (unlayered = higher priority).
+   ============================================ */
+
+@theme {
+  /* Brand Colors — dark mode defaults */
+  --color-brand-navy: #0D1117;
+  --color-brand-section: #11151C;
+  --color-brand-card: #161B22;
+  --color-brand-blue: #145897;
+  --color-brand-teal: #79F3DE;
+  --color-brand-text: #E6EDF3;
+  --color-brand-white: #FFFFFF;
+  --color-brand-muted: #9CA3AF;
+  --color-brand-border: #1F2937;
+  --color-brand-success: #34D399;
+  --color-brand-error: #F87171;
+  --color-brand-elevated: #1C2128;
+  --color-brand-accent-hover: #5EECD0;
+
+  /* Font Families */
+  --font-sans: 'Poppins', sans-serif;
+  --font-body: 'Montserrat', sans-serif;
+}
+
+/* ============================================
+   RGB VARIANTS (for rgba() usage)
+   ============================================ */
+
+:root {
+  --accent-rgb: 121, 243, 222;
+  --blue-rgb: 20, 88, 151;
+  --navy-rgb: 13, 17, 23;
+}
+
+/* ============================================
+   LIGHT MODE OVERRIDES
+   Unlayered body selector beats @layer theme :root
+   ============================================ */
+
+body.light-mode {
+  --color-brand-navy: #FFFFFF;
+  --color-brand-section: #F8FAFC;
+  --color-brand-card: #FFFFFF;
+  --color-brand-blue: #0284C7;
+  --color-brand-teal: #0D9488;
+  --color-brand-text: #374151;
+  --color-brand-white: #111827;
+  --color-brand-muted: #4B5563;
+  --color-brand-border: #E5E7EB;
+  --color-brand-success: #059669;
+  --color-brand-error: #DC2626;
+  --color-brand-elevated: #F1F5F9;
+  --color-brand-accent-hover: #0F766E;
+
+  /* RGB variants for light mode */
+  --accent-rgb: 13, 148, 136;
+  --blue-rgb: 2, 132, 199;
+  --navy-rgb: 255, 255, 255;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+body {
+  background-color: var(--color-brand-navy);
+  color: var(--color-brand-text);
+  font-family: 'Montserrat', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-brand-white);
+}
+
+/* ============================================
+   GRADIENT UTILITY CLASSES
+   ============================================ */
+
+.gradient-text {
+  background: linear-gradient(to right, var(--color-brand-teal), var(--color-brand-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, var(--color-brand-teal), var(--color-brand-blue));
+}
+
+.gradient-bg-subtle {
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.1), rgba(var(--blue-rgb), 0.1));
+}
+
+/* ============================================
+   LENIS SMOOTH SCROLL
+   ============================================ */
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}

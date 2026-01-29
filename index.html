@@ -1,81 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SponsrBridge | Revenue Architecture</title>
-    <meta name="description" content="We design and run your sponsorship revenue engine." />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        --bg-primary: #0D1117;
-        --bg-section: #11151C;
-        --bg-card: #161B22;
-        --text-primary: #FFFFFF;
-        --text-secondary: #E6EDF3;
-        --text-muted: #9CA3AF;
-        --color-accent: #79F3DE;
-        --color-blue: #145897;
-        --border-color: #1F2937; /* gray-800 */
-      }
-      
-      body.light-mode {
-        --bg-primary: #FFFFFF;
-        --bg-section: #F8FAFC;
-        --bg-card: #FFFFFF;
-        --text-primary: #111827; /* gray-900 */
-        --text-secondary: #374151; /* gray-700 */
-        --text-muted: #6B7280; /* gray-500 */
-        --color-accent: #0D9488; /* teal-700 - darker for readability on light */
-        --color-blue: #0284C7; /* sky-600 */
-        --border-color: #E5E7EB; /* gray-200 */
-      }
 
-      body {
-        background-color: var(--bg-primary);
-        color: var(--text-secondary);
-        font-family: 'Montserrat', sans-serif;
-        transition: background-color 0.3s ease, color 0.3s ease;
-      }
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'Poppins', sans-serif;
-        color: var(--text-primary);
-      }
-      .gradient-text {
-        background: linear-gradient(to right, var(--color-accent), var(--color-blue));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-    </style>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            colors: {
-              brand: {
-                navy: 'var(--bg-primary)',
-                section: 'var(--bg-section)',
-                card: 'var(--bg-card)',
-                blue: 'var(--color-blue)',
-                teal: 'var(--color-accent)',
-                text: 'var(--text-secondary)',
-                white: 'var(--text-primary)',
-                muted: 'var(--text-muted)',
-                border: 'var(--border-color)',
-              }
-            },
-            fontFamily: {
-              sans: ['Poppins', 'sans-serif'],
-              body: ['Montserrat', 'sans-serif'],
-            }
-          }
-        }
-      }
-    </script>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SponsrBridge | Revenue Architecture</title>
+  <meta name="description" content="We design and run your sponsorship revenue engine." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <script type="importmap">
 {
   "imports": {
@@ -88,10 +24,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/styles/index.css">
 </head>
-  <body>
-    <div id="root"></div>
+
+<body>
+  <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>
